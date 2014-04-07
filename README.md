@@ -36,8 +36,8 @@ currency.calculate(12); // 14.52
 You can also have castar convert between two currencies that are not the base,
 
 ```js
-currency.display(12,'USD,'ZWD'); // Z$11,961.24
-currency.calculate(12,'USD,'ZWD'); // 11961.24
+currency.display(12,'USD','ZWD'); // Z$11,961.24
+currency.calculate(12,'USD','ZWD'); // 11961.24
 ```
 
 # .auto()
@@ -68,7 +68,7 @@ You can also supply a from currency if you like,
 renders to,
 
 ```html
-<span class='castar' data-from-currency='USD' data-currency='ZWD'>Z&dollar;11,961.24</span>
+<span class='castar' data-original-value='12' data-from-currency='USD' data-currency='ZWD'>Z&dollar;11,961.24</span>
 ```
 
 __Developer Note__ The auto event  callbacks (the ones that watch for changes should be triggered AFTER the castar events listed below to avoid getting stuck in middle earth)
