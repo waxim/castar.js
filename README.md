@@ -2,7 +2,7 @@
 A simple currency conversion lib written in JS. You can set currency exchange rates, displays and symbols and convert between them on the fly.
 
 # Kitchen Sink
-```html
+```js
 
 var currency = new Castar();
 
@@ -46,6 +46,8 @@ Castar has the ability to bind to the DOM and auto convert values as the active 
 ```js
 currency.auto();
 ```
+
+Then you can add the ``castar`` class to any elements you wish to convert, you can also attach some data attribuites.
 
 ```html
 <span class='castar' data-currency='USD'>19.99</span>
@@ -111,12 +113,20 @@ currency.on('rate-updated',function(currency, from, to){
 
 // When a display is triggered
 currency.on('display',function(in, currency, out){
-	console.log('You just requested to display the converted value of '+in+' the active currency was '+currency.name+' and the returned value was '+out); 
+	console.log('You just requested to display the converted value of '
+		+ in 
+		+ ' the active currency was '
+		+ currency.name 
+		+ ' and the returned value was '
+		+ out
+	); 
 });
 
 // When a calculate is triggered
 currency.on('calculate',function(in, currency, out){
-	console.log('You just requested a calculation for the value '+in+' the active currency was '+currency.name+' and the returned value was '+out); 
+	console.log('You just requested a calculation for the value '
+	+ in+' the active currency was '+currency.name 
+	+ ' and the returned value was '+out); 
 });
 
 // When a auto is turned on
