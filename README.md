@@ -13,7 +13,7 @@ currency.add('USD', { symbol: '&dollar;', decimals: 2, name: 'United States Doll
 currency.add('ZWD', { symbol: 'Z&dollar;', decimals: 2, name: 'Zimbabwe Dollar');
 
 // or remove one if you want
-# currency.remove('ZWD');
+// currency.remove('ZWD');
 
 // Set a base currency (a base has a value of 1)
 currency.base('GPB');
@@ -70,6 +70,8 @@ renders to,
 ```html
 <span class='castar' data-from-currency='USD' data-currency='ZWD'>Z&dollar;11,961.24</span>
 ```
+
+__Developer Note__ The auto event  callbacks (the ones that watch for changes should be triggered AFTER the castar events listed below to avoid getting stuck in middle earth)
 
 # Events
 Castar has some built in events you can attach callbacks to.
