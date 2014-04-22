@@ -24,7 +24,7 @@ currency.rate('EUR',1.21);
 currency.rate('ZWD',600.464);
 
 // Set the active currency
-currency.set('EUR');
+currency.activate('EUR');
 
 // Calculate and display value
 currency.display(12); // &euro;14.52 (which would render to €14.52 in HTML)
@@ -42,6 +42,8 @@ currency.calculate(12,'USD','ZWD'); // 11961.24
 
 # .auto()
 Castar has the ability to bind to the DOM and auto convert values as the active currency is switched. Triggering ``.auto()`` on a castor object will parse the DOM and convert any waiting values. It will also set an event to watch for changes in .base(), .active() or .rate() and will update the relevant values in the DOM.
+
+Castar assumes we have a DOM, so use your favourite library to ensure that's the case or auto wont work.
 
 ```js
 currency.auto();
@@ -78,9 +80,9 @@ Castar has some built in events you can attach callbacks to.
 
 ```js
 
-// When a new Castar instance is created
-currency.on('init',function(){
-	console.log('Your have made a new castar, Gondor would be proud.'); 
+// When an active currency is first set
+currency.on('active',function(currency){
+	console.log('Your currency set the active currency to '+ currency.name); 
 });
 
 // When the active currency is switched
@@ -104,8 +106,8 @@ currency.on('base',function(base){
 });
 
 // When the rate for a currency is added
-currency.on('rate-added',function(currency, value){
-	console.log('You just set the conversion rate for '+currency.name+' to '+value); 
+currency.on('rate-added',function(currency){
+	console.log('You just set the conversion rate for '+currency.name+' to '+currency.rate); 
 });
 
 // When the rate for a currency is updated
@@ -114,9 +116,9 @@ currency.on('rate-updated',function(currency, from, to){
 });
 
 // When a display is triggered
-currency.on('display',function(in, currency, out){
+currency.on('display',function(_in, currency, out){
 	console.log('You just requested to display the converted value of '
-		+ in 
+		+ _in 
 		+ ' the active currency was '
 		+ currency.name 
 		+ ' and the returned value was '
@@ -125,9 +127,9 @@ currency.on('display',function(in, currency, out){
 });
 
 // When a calculate is triggered
-currency.on('calculate',function(in, currency, out){
+currency.on('calculate',function(_in, currency, out){
 	console.log('You just requested a calculation for the value '
-	+ in+' the active currency was '+currency.name 
+	+ _in+' the active currency was '+currency.name 
 	+ ' and the returned value was '+out); 
 });
 
