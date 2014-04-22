@@ -47,10 +47,11 @@
 			var elems = document.getElementsByTagName('*'), i;
 			for (i in elems) {
 				if((' ' + elems[i].className + ' ').indexOf(' ' + this.options.selector + ' ') > -1) {
-					this._elements[] = elems[i];
+					this._elements.push(elems[i]);
 				}
 			}
 		}
+		
 		
 		/*
 		* @desc function to add a currency object to castar
@@ -137,27 +138,64 @@
 				throw new Error('Castar: We could not activate that currency as it does not exist.');
 			}
 		}
+
+
+		/*
+		* @desc function to toggle auto updating of the dom
+		*/
+		this.auto = function(){
+			if(this._auto == 0){
+				this._auto = 1;
+				this.trigger('auto-on');
+				this.collect(); // recollect our elements.
+				this.update();
+			} else {
+				this._auto = 0;
+				this.trigger('auto-off');
+			}
+			
+			return this;
+		}
+		
+		/*
+		* @desc function to redraw our dom bindings
+		*/
+		this.update = function(){
+			// Foreach every element, if has orginal-value get it and rerun conversion on 'active' ... unless it has a from-currency then use that
+			for(key in this._elements){
+				var ele = this._elements[key];
+				
+				var to = ele.getAttribute('data-currency') || this._active;
+				var from = ele.getAttribute('data-from-currency') || this._base;
+				
+				var original_value = ele.getAttribute('data-original-value') * 1;
+				var value = parseInt('0'+ele.innerHTML);
+				// If we have original value set value to that for conversion
+				if(original_value > 0){
+					value = original_value;
+				}
+				ele.setAttribite('data-original-value',value);
+				var result = this.calculate(value,from,to);
+				ele.innerHTML = result;
+				
+			}
+		}
+		
+		
+		/*
+		* @desc function to calculate a converted value in the active currency
+		*/
+		this.calculate = function(value, from, to){
+			// if from different from base, get ratio to convert on
+			
+			// make sure we have a rate and run it.
+			return value * 2;
+		}
 		
 		/*
 		* @desc function to display a converted value in the active currency
 		*/
 		this.display = function(value){ }
-		
-		/*
-		* @desc function to calculate a converted value in the active currency
-		*/
-		this.calcuate = function(value){ }
-		
-		
-		/*
-		* @desc function to toggle auto updating of the dom
-		*/
-		this.auto = function(){ }
-		
-		/*
-		* @desc function to redraw our dom bindings
-		*/
-		this.update = function(){ }
 		
 		/*
 		* @desc function to add trigger an event callback
