@@ -6,7 +6,10 @@
 		this._table = {};
 		
 		/* Set a list of our allowed events */
-		this._events = ['switch','add','remove','base','rate-added','rate-updated','display','calculate','auto-on','auto-off'];
+		this._events = ['activate','switch','add','remove','base','rate-added','rate-updated','display','calculate','update','auto-on','auto-off'];
+		
+		/* Set a holder for our event callbacks */
+		this._callbacks = {};
 		
 		/* A holder for our 'base' object key */
 		this._base = '';
@@ -167,17 +170,19 @@
 				
 				var to = ele.getAttribute('data-currency') || this._active;
 				var from = ele.getAttribute('data-from-currency') || this._base;
-				
+
 				var original_value = ele.getAttribute('data-original-value') * 1;
-				var value = parseInt('0'+ele.innerHTML);
+				var value = ele.innerHTML * 1;
 				// If we have original value set value to that for conversion
 				if(original_value > 0){
 					value = original_value;
 				}
-				ele.setAttribite('data-original-value',value);
-				var result = this.calculate(value,from,to);
+				
+				ele.setAttribute('data-original-value',value);
+				var result = this.display(value,from,to);
 				ele.innerHTML = result;
 				
+				this.trigger('update');
 			}
 		}
 		
@@ -187,27 +192,70 @@
 		*/
 		this.calculate = function(value, from, to){
 			// if from different from base, get ratio to convert on
+			var to = this._exists(to) ? to : this._active;
+			var from = this._exists(from) ? from : this._base;
 			
-			// make sure we have a rate and run it.
-			return value * 2;
+			var base = 1;
+			var decimals = this._table[this._base]['decimals'] || this.options.decimals;
+			var rate = this._table[to]['rate'] || this._table[this._active]['rate'];
+			
+			// if our from is not the base, convert value first.
+			if(from !== this._base){
+				var from_rate = this._table[from]['rate'] * 1;
+				
+				var result = this.convert(value,from_rate);
+				decimals = this._table[from]['decimals'] || decimals;
+				value = result;
+			}
+			
+			var result = this.convert(value,rate);
+			this.trigger('calculate',value, this._table[to], result);
+			
+			return parseFloat(Math.round(result * 100) / 100).toFixed(2);
 		}
 		
 		/*
 		* @desc function to display a converted value in the active currency
 		*/
-		this.display = function(value){ }
+		this.display = function(value, from, to){
+			var to = this._exists(to) ? to : this._active;
+			var from = this._exists(from) ? from : this._base;
+			
+			var number = this.calculate(value,from,to);
+			
+			var symbol = this._table[to]['symbol'];
+			
+			this.trigger('display',value,this._table[to],number);
+			return symbol + '' + number + '';
+		}
+		
+		/*
+		* @desc function to hard convert a value at a given rate
+		*/
+		this.convert = function(value,rate){
+			return (value*rate);
+		}
 		
 		/*
 		* @desc function to add trigger an event callback
 		*/
 		this.trigger = function(fun){
+			if(typeof this._callbacks[fun] == 'function'){
+				this._callbacks[fun](arguments);
+			}
 			return true;
 		}
 		
 		/*
 		* @desc function to register an event callback
 		*/
-		this.on = function(fun, callback){ }
+		this.on = function(fun, callback){
+			if(this._events.indexOf(fun) > -1){
+				this._callbacks[fun] = callback;
+			} else {
+				throw new Error('Castar: that event ('+fun+') does not exist.');
+			}
+		}
 		
 	}
 	

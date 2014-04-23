@@ -10,7 +10,7 @@ var currency = new Castar();
 currency.add('GPB', { symbol: '&pound;', decimals: 2, name: 'British Pound Sterling' });
 currency.add('EUR', { symbol: '&euro;', decimals: 2, name: 'Euros' });
 currency.add('USD', { symbol: '&dollar;', decimals: 2, name: 'United States Dollar' });
-currency.add('ZWD', { symbol: 'Z&dollar;', decimals: 2, name: 'Zimbabwe Dollar');
+currency.add('ZWD', { symbol: 'Z&dollar;', decimals: 2, name: 'Zimbabwe Dollar'});
 
 // or remove one if you want
 // currency.remove('ZWD');
@@ -81,7 +81,7 @@ Castar has some built in events you can attach callbacks to.
 ```js
 
 // When an active currency is first set
-currency.on('active',function(currency){
+currency.on('activate',function(currency){
 	console.log('Your currency set the active currency to '+ currency.name); 
 });
 
@@ -126,6 +126,7 @@ currency.on('display',function(_in, currency, out){
 	); 
 });
 
+
 // When a calculate is triggered
 currency.on('calculate',function(_in, currency, out){
 	console.log('You just requested a calculation for the value '
@@ -141,6 +142,11 @@ currency.on('auto-on',function(){
 // When a auto is turned off
 currency.on('auto-off',function(){
 	console.log('You just turned auto off'); 
+});
+
+// When the dom is updated
+currency.on('update',function(){
+	console.log('You just updated the DOM'); 
 });
 
 ```
