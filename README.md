@@ -1,5 +1,5 @@
 # Castar.js
-A simple currency conversion lib written in JS. You can set currency exchange rates, displays and symbols and convert between them on the fly.
+A simple currency conversion lib written in JS. You can set currency exchange rates, displays and symbols and convert between them on the fly. Also has auto options to convert on page load.
 
 # Kitchen Sink
 ```js
@@ -27,7 +27,7 @@ currency.rate('ZWD',600.464);
 currency.activate('EUR');
 
 // Calculate and display value
-currency.display(12); // &euro;14.52 (which would render to €14.52 in HTML)
+currency.display(12); // &euro;14.52 (which would render to â‚¬14.52 in HTML)
 
 // or just get the value
 currency.calculate(12); // 14.52
